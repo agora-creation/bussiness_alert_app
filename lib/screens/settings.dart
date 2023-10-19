@@ -1,10 +1,12 @@
 import 'package:bussiness_alert_app/common/functions.dart';
 import 'package:bussiness_alert_app/common/style.dart';
+import 'package:bussiness_alert_app/providers/user.dart';
 import 'package:bussiness_alert_app/screens/login.dart';
 import 'package:bussiness_alert_app/screens/reception.dart';
 import 'package:bussiness_alert_app/widgets/link_text.dart';
 import 'package:bussiness_alert_app/widgets/settings_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -16,6 +18,8 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -50,7 +54,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsListTile(
               iconData: Icons.hearing,
               label: '受信設定',
-              onTap: () => pushScreen(context, const ReceptionScreen()),
+              onTap: () => pushScreen(
+                context,
+                ReceptionScreen(userProvider: userProvider),
+              ),
             ),
             SettingsListTile(
               iconData: Icons.notifications,
@@ -61,19 +68,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             LinkText(
               label: 'ログアウト',
               labelColor: kRedColor,
-              onTap: () => pushReplacementScreen(
-                context,
-                const LoginScreen(),
-              ),
+              onTap: () async {
+                await userProvider.signOut();
+                userProvider.clearController();
+                if (!mounted) return;
+                pushReplacementScreen(context, const LoginScreen());
+              },
             ),
             const SizedBox(height: 24),
             LinkText(
               label: 'ユーザーアカウントを削除',
               labelColor: kRedColor,
-              onTap: () => pushReplacementScreen(
-                context,
-                const LoginScreen(),
-              ),
+              onTap: () async {
+                await userProvider.delete();
+                userProvider.clearController();
+                if (!mounted) return;
+                pushReplacementScreen(context, const LoginScreen());
+              },
             ),
           ],
         ),

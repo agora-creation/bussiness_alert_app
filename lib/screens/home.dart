@@ -1,9 +1,11 @@
 import 'package:bussiness_alert_app/common/functions.dart';
 import 'package:bussiness_alert_app/common/style.dart';
+import 'package:bussiness_alert_app/providers/user.dart';
 import 'package:bussiness_alert_app/screens/notice_detail.dart';
 import 'package:bussiness_alert_app/screens/settings.dart';
 import 'package:bussiness_alert_app/widgets/notice_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -27,14 +31,16 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    '島村裕太',
-                    style: TextStyle(
+                  Text(
+                    userProvider.user?.name ?? '',
+                    style: const TextStyle(
                       color: kBlackColor,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'SourceHanSansJP-Bold',
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   GestureDetector(
                     onTap: () => showBottomUpScreen(

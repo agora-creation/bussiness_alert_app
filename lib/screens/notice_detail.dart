@@ -17,7 +17,7 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
       appBar: AppBar(
         backgroundColor: kWhiteColor,
         automaticallyImplyLeading: false,
-        title: const Text('島津病院'),
+        title: const Text('お知らせタイトル'),
         actions: [
           IconButton(
             icon: const Icon(Icons.close),
@@ -32,39 +32,35 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '2023/10/19 16:22',
-                style: TextStyle(
-                  color: kGreyColor,
-                  fontSize: 14,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'お知らせタイトル',
-                style: TextStyle(
-                  color: kBlackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'SourceHanSansJP-Bold',
-                ),
-              ),
-              Text(
                 'お知らせ内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
                 style: TextStyle(
                   color: kBlackColor,
                   fontSize: 16,
                 ),
               ),
+              SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  '2023/10/19 16:22',
+                  style: TextStyle(
+                    color: kGreyColor,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
+          const Divider(height: 3, color: kBlackColor),
+          const SizedBox(height: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 '回答してください',
                 style: TextStyle(
-                  color: kBlackColor,
+                  color: kRedColor,
                   fontSize: 14,
                 ),
               ),

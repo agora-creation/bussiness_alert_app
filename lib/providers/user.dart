@@ -1,3 +1,4 @@
+import 'package:bussiness_alert_app/models/sender.dart';
 import 'package:bussiness_alert_app/models/user.dart';
 import 'package:bussiness_alert_app/services/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,7 +66,7 @@ class UserProvider with ChangeNotifier {
     if (nameController.text == '') error = 'お名前を入力してください';
     if (emailController.text == '') error = 'メールアドレスを入力してください';
     if (passwordController.text == '') error = 'パスワードを入力してください';
-    if (passwordController.text == rePasswordController.text) {
+    if (passwordController.text != rePasswordController.text) {
       error = 'パスワードが一致しません';
     }
     try {
@@ -125,7 +126,7 @@ class UserProvider with ChangeNotifier {
   Future<String?> updateUserPassword() async {
     String? error;
     if (passwordController.text == '') error = 'パスワードを入力してください';
-    if (passwordController.text == rePasswordController.text) {
+    if (passwordController.text != rePasswordController.text) {
       error = 'パスワードが一致しません';
     }
     try {
@@ -133,6 +134,22 @@ class UserProvider with ChangeNotifier {
       userService.update({
         'id': _authUser?.uid,
         'password': passwordController.text,
+      });
+    } catch (e) {
+      error = e.toString();
+    }
+    return error;
+  }
+
+  Future<String?> insertSender(SenderModel? sender) async {
+    String? error;
+    if (sender == null) error = '発信者番号を確認してください';
+    try {
+      List<String> senderIds = _user?.senderIds ?? [];
+      senderIds.add(sender?.id ?? '');
+      userService.update({
+        'id': _authUser?.uid,
+        'senderIds': senderIds,
       });
     } catch (e) {
       error = e.toString();

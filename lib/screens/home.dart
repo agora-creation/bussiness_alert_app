@@ -42,15 +42,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  GestureDetector(
-                    onTap: () => showBottomUpScreen(
-                      context,
-                      const SettingsScreen(),
-                    ),
-                    child: const Icon(
-                      Icons.more_vert,
-                      color: kBlackColor,
-                    ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Icon(
+                          Icons.notification_add,
+                          color: kBlackColor,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      GestureDetector(
+                        onTap: () => showBottomUpScreen(
+                          context,
+                          const SettingsScreen(),
+                        ),
+                        child: const Icon(
+                          Icons.more_vert,
+                          color: kBlackColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

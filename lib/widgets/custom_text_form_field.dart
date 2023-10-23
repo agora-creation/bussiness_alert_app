@@ -1,4 +1,3 @@
-import 'package:bussiness_alert_app/common/style.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -8,6 +7,7 @@ class CustomTextFormField extends StatelessWidget {
   final int? maxLines;
   final String? label;
   final Color? color;
+  final Color? fillColor;
   final IconData? prefix;
   final IconData? suffix;
   final Function()? onTap;
@@ -19,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
     this.maxLines,
     this.label,
     this.color,
+    this.fillColor,
     this.prefix,
     this.suffix,
     this.onTap,
@@ -53,7 +54,7 @@ class CustomTextFormField extends StatelessWidget {
           ),
         ),
         filled: true,
-        fillColor: kWhiteColor,
+        fillColor: fillColor,
         enabledBorder: UnderlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,

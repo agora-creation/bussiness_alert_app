@@ -3,6 +3,9 @@ import 'package:bussiness_alert_app/common/style.dart';
 import 'package:bussiness_alert_app/providers/user.dart';
 import 'package:bussiness_alert_app/screens/login.dart';
 import 'package:bussiness_alert_app/screens/reception.dart';
+import 'package:bussiness_alert_app/screens/user_email.dart';
+import 'package:bussiness_alert_app/screens/user_name.dart';
+import 'package:bussiness_alert_app/screens/user_password.dart';
 import 'package:bussiness_alert_app/widgets/link_text.dart';
 import 'package:bussiness_alert_app/widgets/settings_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         backgroundColor: kWhiteColor,
         automaticallyImplyLeading: false,
+        title: const Text('各種設定'),
         actions: [
           IconButton(
             icon: const Icon(Icons.close),
@@ -39,17 +43,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsListTile(
               iconData: Icons.person,
               label: 'お名前変更',
-              onTap: () {},
+              onTap: () => pushScreen(
+                context,
+                UserNameScreen(userProvider: userProvider),
+              ),
             ),
             SettingsListTile(
               iconData: Icons.email,
               label: 'メールアドレス変更',
-              onTap: () {},
+              onTap: () => pushScreen(
+                context,
+                UserEmailScreen(userProvider: userProvider),
+              ),
             ),
             SettingsListTile(
               iconData: Icons.password,
               label: 'パスワード変更',
-              onTap: () {},
+              onTap: () => pushScreen(
+                context,
+                UserPasswordScreen(userProvider: userProvider),
+              ),
             ),
             SettingsListTile(
               iconData: Icons.hearing,

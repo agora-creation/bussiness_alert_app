@@ -18,4 +18,8 @@ class SenderService {
     });
     return ret;
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamList() {
+    return firestore.collection(collection).snapshots();
+  }
 }

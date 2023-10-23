@@ -1,5 +1,6 @@
 import 'package:bussiness_alert_app/models/sender.dart';
 import 'package:bussiness_alert_app/models/user.dart';
+import 'package:bussiness_alert_app/services/fm.dart';
 import 'package:bussiness_alert_app/services/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class UserProvider with ChangeNotifier {
   FirebaseAuth? auth;
   User? _authUser;
   User? get authUser => _authUser;
+  FmServices fmServices = FmServices();
   UserService userService = UserService();
   UserModel? _user;
   UserModel? get user => _user;
@@ -49,9 +51,10 @@ class UserProvider with ChangeNotifier {
         password: passwordController.text,
       );
       _authUser = result?.user;
+      String token = await fmServices.getToken() ?? '';
       userService.update({
         'id': _authUser?.uid,
-        'token': '',
+        'token': token,
       });
     } catch (e) {
       _status = AuthStatus.unauthenticated;
@@ -77,13 +80,14 @@ class UserProvider with ChangeNotifier {
         password: passwordController.text,
       );
       _authUser = result?.user;
+      String token = await fmServices.getToken() ?? '';
       userService.create({
         'id': _authUser?.uid,
         'name': nameController.text,
         'email': emailController.text,
         'password': passwordController.text,
         'senderIds': [],
-        'token': '',
+        'token': token,
         'createdAt': DateTime.now(),
       });
     } catch (e) {
@@ -141,12 +145,30 @@ class UserProvider with ChangeNotifier {
     return error;
   }
 
-  Future<String?> insertSender(SenderModel? sender) async {
+  Future<String?> addSender(SenderModel sender) async {
     String? error;
-    if (sender == null) error = '発信者番号を確認してください';
     try {
       List<String> senderIds = _user?.senderIds ?? [];
-      senderIds.add(sender?.id ?? '');
+      if (!senderIds.contains(sender.id)) {
+        senderIds.add(sender.id);
+      }
+      userService.update({
+        'id': _authUser?.uid,
+        'senderIds': senderIds,
+      });
+    } catch (e) {
+      error = e.toString();
+    }
+    return error;
+  }
+
+  Future<String?> removeSender(SenderModel sender) async {
+    String? error;
+    try {
+      List<String> senderIds = _user?.senderIds ?? [];
+      if (senderIds.contains(sender.id)) {
+        senderIds.remove(sender.id);
+      }
       userService.update({
         'id': _authUser?.uid,
         'senderIds': senderIds,

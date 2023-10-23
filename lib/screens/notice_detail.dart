@@ -1,5 +1,6 @@
 import 'package:bussiness_alert_app/common/style.dart';
 import 'package:bussiness_alert_app/widgets/custom_lg_button.dart';
+import 'package:bussiness_alert_app/widgets/custom_radio_list_tile.dart';
 import 'package:flutter/material.dart';
 
 class NoticeDetailScreen extends StatefulWidget {
@@ -10,6 +11,8 @@ class NoticeDetailScreen extends StatefulWidget {
 }
 
 class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
+  String? answerValue;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,14 +54,14 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          const Divider(height: 3, color: kBlackColor),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
+          const Divider(height: 4, color: kGreyColor),
+          const SizedBox(height: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                '回答してください',
+                '選択して回答してください',
                 style: TextStyle(
                   color: kRedColor,
                   fontSize: 14,
@@ -66,27 +69,39 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
               ),
               Column(
                 children: [
-                  RadioListTile(
-                    title: const Text('参加します'),
+                  CustomRadioListTile(
                     value: '参加します',
-                    groupValue: '参加します',
-                    onChanged: (value) {},
+                    groupValue: answerValue,
+                    onChanged: (value) {
+                      setState(() {
+                        answerValue = value;
+                      });
+                    },
                   ),
-                  RadioListTile(
-                    title: const Text('参加しません'),
+                  CustomRadioListTile(
                     value: '参加しません',
-                    groupValue: '参加します',
-                    onChanged: (value) {},
+                    groupValue: answerValue,
+                    onChanged: (value) {
+                      setState(() {
+                        answerValue = value;
+                      });
+                    },
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              CustomLgButton(
-                label: '回答を送信する',
-                labelColor: kWhiteColor,
-                backgroundColor: kBlueColor,
-                onPressed: () {},
-              ),
+              const SizedBox(height: 16),
+              answerValue == null
+                  ? const CustomLgButton(
+                      label: '回答を送信する',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kGreyColor,
+                    )
+                  : CustomLgButton(
+                      label: '回答を送信する',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kBlueColor,
+                      onPressed: () {},
+                    ),
             ],
           ),
         ],

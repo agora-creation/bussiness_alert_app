@@ -27,6 +27,7 @@ dependencies:
   firebase_auth: ^4.11.1
   cloud_firestore: ^4.11.0
   firebase_messaging: ^14.7.1
+  flutter_local_notifications: ^16.1.0
 
 dependency_overrides:
   modal_bottom_sheet: ^3.0.0-pre
@@ -41,6 +42,9 @@ flutter:
 
   uses-material-design: true
 
+  assets:
+    - assets/images/
+
   fonts:
     - family: SourceHanSansJP-Bold
       fonts:
@@ -48,3 +52,10 @@ flutter:
     - family: SourceHanSansJP-Regular
       fonts:
         - asset: assets/fonts/SourceHanSansJP-Regular.otf
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: 'assets/images/icon.png'
+  adaptive_icon_background: '#F4F5F7'
+  adaptive_icon_foreground: 'assets/images/icon_adaptive_foreground.png'

@@ -2,7 +2,6 @@ import 'package:bussiness_alert_app/common/functions.dart';
 import 'package:bussiness_alert_app/common/style.dart';
 import 'package:bussiness_alert_app/providers/user.dart';
 import 'package:bussiness_alert_app/screens/login.dart';
-import 'package:bussiness_alert_app/screens/reception.dart';
 import 'package:bussiness_alert_app/screens/user_email.dart';
 import 'package:bussiness_alert_app/screens/user_name.dart';
 import 'package:bussiness_alert_app/screens/user_password.dart';
@@ -63,19 +62,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context,
                 UserPasswordScreen(userProvider: userProvider),
               ),
-            ),
-            SettingsListTile(
-              iconData: Icons.hearing,
-              label: '受信設定',
-              onTap: () => pushScreen(
-                context,
-                ReceptionScreen(userProvider: userProvider),
-              ),
-            ),
-            SettingsListTile(
-              iconData: Icons.notifications,
-              label: '通知設定',
-              onTap: () {},
             ),
             const SizedBox(height: 24),
             LinkText(

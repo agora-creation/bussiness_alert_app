@@ -2,6 +2,7 @@ import 'package:bussiness_alert_app/common/functions.dart';
 import 'package:bussiness_alert_app/common/style.dart';
 import 'package:bussiness_alert_app/providers/user.dart';
 import 'package:bussiness_alert_app/screens/notice_detail.dart';
+import 'package:bussiness_alert_app/screens/sender.dart';
 import 'package:bussiness_alert_app/screens/settings.dart';
 import 'package:bussiness_alert_app/widgets/notice_list.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () => showBottomUpScreen(
+                          context,
+                          const SenderScreen(),
+                        ),
                         child: const Icon(
                           Icons.notification_add,
                           color: kBlackColor,

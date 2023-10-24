@@ -41,13 +41,13 @@ class _SenderScreenState extends State<SenderScreen> {
         stream: senderService.streamList(),
         builder: (context, snapshot) {
           List<SenderModel> senders = [];
-          List<String> senderIds = userProvider.user?.senderIds ?? [];
+          List<String> senderNumbers = userProvider.user?.senderNumbers ?? [];
           if (snapshot.hasData) {
             for (DocumentSnapshot<Map<String, dynamic>> doc
                 in snapshot.data!.docs) {
               SenderModel sender = SenderModel.fromSnapshot(doc);
-              if (senderIds.contains(sender.id)) {
-                senders.add(SenderModel.fromSnapshot(doc));
+              if (senderNumbers.contains(sender.number)) {
+                senders.add(sender);
               }
             }
           }
@@ -142,6 +142,13 @@ class _AddDialogState extends State<AddDialog> {
                       backgroundColor: kBlueColor,
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
+                        List<String> senderNumbers =
+                            widget.userProvider.user?.senderNumbers ?? [];
+                        if (senderNumbers.contains(numberController.text)) {
+                          if (!mounted) return;
+                          showMessage(context, '既に追加済みの番号です', false);
+                          return;
+                        }
                         SenderModel? tmpSender = await senderService.select(
                           numberController.text,
                         );
@@ -160,13 +167,6 @@ class _AddDialogState extends State<AddDialog> {
                       labelColor: kWhiteColor,
                       backgroundColor: kBlueColor,
                       onPressed: () async {
-                        List<String> senderIds =
-                            widget.userProvider.user?.senderIds ?? [];
-                        if (senderIds.contains(sender?.id)) {
-                          if (!mounted) return;
-                          showMessage(context, '既に追加済みの番号です', false);
-                          return;
-                        }
                         String? error =
                             await widget.userProvider.addSender(sender!);
                         if (error != null) {

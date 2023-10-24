@@ -1,10 +1,14 @@
+import 'package:bussiness_alert_app/common/functions.dart';
 import 'package:bussiness_alert_app/common/style.dart';
+import 'package:bussiness_alert_app/models/user_notice.dart';
 import 'package:flutter/material.dart';
 
 class NoticeList extends StatelessWidget {
+  final UserNoticeModel notice;
   final Function()? onTap;
 
   const NoticeList({
+    required this.notice,
     this.onTap,
     super.key,
   });
@@ -15,20 +19,20 @@ class NoticeList extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 4),
       child: GestureDetector(
         onTap: onTap,
-        child: const Card(
+        child: Card(
           elevation: 8,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '島津病院',
-                      style: TextStyle(
+                      notice.senderName,
+                      style: const TextStyle(
                         color: kBlackColor,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -37,23 +41,25 @@ class NoticeList extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Icon(
-                      Icons.circle,
-                      color: kRedColor,
-                      size: 10,
-                    ),
+                    notice.isRead == false
+                        ? const Icon(
+                            Icons.circle,
+                            color: kRedColor,
+                            size: 10,
+                          )
+                        : Container(),
                   ],
                 ),
               ),
-              Divider(height: 1, color: kBlackColor),
+              const Divider(height: 1, color: kBlackColor),
               Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'お知らせタイトル',
-                      style: TextStyle(
+                      notice.title,
+                      style: const TextStyle(
                         color: kBlackColor,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -62,31 +68,33 @@ class NoticeList extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
-                      'お知らせ内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
-                      style: TextStyle(
+                      notice.content,
+                      style: const TextStyle(
                         color: kBlackColor,
                         fontSize: 14,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        notice.isAnswer
+                            ? const Text(
+                                '回答が必要です',
+                                style: TextStyle(
+                                  color: kRedColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : Container(),
                         Text(
-                          '回答が必要です',
-                          style: TextStyle(
-                            color: kRedColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          '2023/10/19 16:20',
-                          style: TextStyle(
+                          dateText('yyyy/MM/dd HH:mm', notice.createdAt),
+                          style: const TextStyle(
                             color: kGreyColor,
                             fontSize: 14,
                           ),

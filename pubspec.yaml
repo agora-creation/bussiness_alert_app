@@ -57,5 +57,5 @@ flutter_icons:
   android: true
   ios: true
   image_path: 'assets/images/icon.png'
-  adaptive_icon_background: '#F4F5F7'
+  adaptive_icon_background: '#FFEB3B'
   adaptive_icon_foreground: 'assets/images/icon_adaptive_foreground.png'

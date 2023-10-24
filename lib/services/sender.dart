@@ -20,6 +20,9 @@ class SenderService {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamList() {
-    return firestore.collection(collection).snapshots();
+    return firestore
+        .collection(collection)
+        .orderBy('createdAt', descending: true)
+        .snapshots();
   }
 }

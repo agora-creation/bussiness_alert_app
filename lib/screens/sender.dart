@@ -48,6 +48,7 @@ class _SenderScreenState extends State<SenderScreen> {
               senders.add(SenderModel.fromSnapshot(doc));
             }
           }
+          print(senders);
           if (senders.isEmpty) {
             return const Center(
               child: Text(

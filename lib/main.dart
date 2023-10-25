@@ -1,4 +1,5 @@
 import 'package:bussiness_alert_app/common/style.dart';
+import 'package:bussiness_alert_app/firebase_options.dart';
 import 'package:bussiness_alert_app/providers/user.dart';
 import 'package:bussiness_alert_app/screens/home.dart';
 import 'package:bussiness_alert_app/screens/login.dart';
@@ -9,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-
-import 'firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

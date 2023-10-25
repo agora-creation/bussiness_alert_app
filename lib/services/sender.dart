@@ -5,7 +5,11 @@ class SenderService {
   String collection = 'sender';
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<SenderModel?> select(String? number) async {
+  void update(Map<String, dynamic> values) {
+    firestore.collection(collection).doc(values['id']).update(values);
+  }
+
+  Future<SenderModel?> selectNumber(String? number) async {
     SenderModel? ret;
     await firestore
         .collection(collection)
@@ -19,9 +23,10 @@ class SenderService {
     return ret;
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> streamList() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamList(String? userId) {
     return firestore
         .collection(collection)
+        .where('userIds', arrayContains: userId ?? 'error')
         .orderBy('createdAt', descending: true)
         .snapshots();
   }

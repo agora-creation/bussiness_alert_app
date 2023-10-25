@@ -1,4 +1,3 @@
-import 'package:bussiness_alert_app/models/sender.dart';
 import 'package:bussiness_alert_app/models/user.dart';
 import 'package:bussiness_alert_app/services/fm.dart';
 import 'package:bussiness_alert_app/services/user.dart';
@@ -86,7 +85,6 @@ class UserProvider with ChangeNotifier {
         'name': nameController.text,
         'email': emailController.text,
         'password': passwordController.text,
-        'senderNumbers': [],
         'token': token,
         'createdAt': DateTime.now(),
       });
@@ -138,40 +136,6 @@ class UserProvider with ChangeNotifier {
       userService.update({
         'id': _authUser?.uid,
         'password': passwordController.text,
-      });
-    } catch (e) {
-      error = e.toString();
-    }
-    return error;
-  }
-
-  Future<String?> addSender(SenderModel sender) async {
-    String? error;
-    try {
-      List<String> senderNumbers = _user?.senderNumbers ?? [];
-      if (!senderNumbers.contains(sender.number)) {
-        senderNumbers.add(sender.number);
-      }
-      userService.update({
-        'id': _authUser?.uid,
-        'senderNumbers': senderNumbers,
-      });
-    } catch (e) {
-      error = e.toString();
-    }
-    return error;
-  }
-
-  Future<String?> removeSender(SenderModel sender) async {
-    String? error;
-    try {
-      List<String> senderNumbers = _user?.senderNumbers ?? [];
-      if (senderNumbers.contains(sender.number)) {
-        senderNumbers.remove(sender.number);
-      }
-      userService.update({
-        'id': _authUser?.uid,
-        'senderNumbers': senderNumbers,
       });
     } catch (e) {
       error = e.toString();

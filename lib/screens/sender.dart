@@ -1,6 +1,7 @@
 import 'package:bussiness_alert_app/common/functions.dart';
 import 'package:bussiness_alert_app/common/style.dart';
 import 'package:bussiness_alert_app/models/sender.dart';
+import 'package:bussiness_alert_app/models/user.dart';
 import 'package:bussiness_alert_app/providers/user.dart';
 import 'package:bussiness_alert_app/services/sender.dart';
 import 'package:bussiness_alert_app/widgets/custom_sm_button.dart';
@@ -38,23 +39,19 @@ class _SenderScreenState extends State<SenderScreen> {
         ],
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: senderService.streamList(),
+        stream: senderService.streamList(userProvider.user?.id),
         builder: (context, snapshot) {
           List<SenderModel> senders = [];
-          List<String> senderNumbers = userProvider.user?.senderNumbers ?? [];
           if (snapshot.hasData) {
             for (DocumentSnapshot<Map<String, dynamic>> doc
                 in snapshot.data!.docs) {
-              SenderModel sender = SenderModel.fromSnapshot(doc);
-              if (senderNumbers.contains(sender.number)) {
-                senders.add(sender);
-              }
+              senders.add(SenderModel.fromSnapshot(doc));
             }
           }
           if (senders.isEmpty) {
             return const Center(
               child: Text(
-                '発信者を追加してください',
+                '受信先を追加してください',
                 style: TextStyle(color: kBlackColor),
               ),
             );
@@ -63,15 +60,14 @@ class _SenderScreenState extends State<SenderScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: senders.length,
             itemBuilder: (context, index) {
-              SenderModel sender = senders[index];
               return SenderList(
-                sender: sender,
+                sender: senders[index],
                 removeLabel: '受信解除',
                 removeOnPressed: () => showDialog(
                   context: context,
                   builder: (context) => RemoveDialog(
-                    userProvider: userProvider,
-                    sender: sender,
+                    user: userProvider.user!,
+                    sender: senders[index],
                   ),
                 ),
               );
@@ -82,9 +78,9 @@ class _SenderScreenState extends State<SenderScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showDialog(
           context: context,
-          builder: (context) => AddDialog(userProvider: userProvider),
+          builder: (context) => AddDialog(user: userProvider.user!),
         ),
-        label: const Text('発信者を追加'),
+        label: const Text('受信先を追加'),
         icon: const Icon(Icons.add),
       ),
     );
@@ -92,10 +88,10 @@ class _SenderScreenState extends State<SenderScreen> {
 }
 
 class AddDialog extends StatefulWidget {
-  final UserProvider userProvider;
+  final UserModel user;
 
   const AddDialog({
-    required this.userProvider,
+    required this.user,
     super.key,
   });
 
@@ -137,19 +133,13 @@ class _AddDialogState extends State<AddDialog> {
               ),
               sender == null
                   ? CustomSmButton(
-                      label: '確認する',
+                      label: '検索する',
                       labelColor: kWhiteColor,
                       backgroundColor: kBlueColor,
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        List<String> senderNumbers =
-                            widget.userProvider.user?.senderNumbers ?? [];
-                        if (senderNumbers.contains(numberController.text)) {
-                          if (!mounted) return;
-                          showMessage(context, '既に追加済みの番号です', false);
-                          return;
-                        }
-                        SenderModel? tmpSender = await senderService.select(
+                        SenderModel? tmpSender =
+                            await senderService.selectNumber(
                           numberController.text,
                         );
                         if (tmpSender == null) {
@@ -167,14 +157,14 @@ class _AddDialogState extends State<AddDialog> {
                       labelColor: kWhiteColor,
                       backgroundColor: kBlueColor,
                       onPressed: () async {
-                        String? error =
-                            await widget.userProvider.addSender(sender!);
-                        if (error != null) {
-                          if (!mounted) return;
-                          showMessage(context, error, false);
-                          return;
+                        List<String> userIds = sender?.userIds ?? [];
+                        if (!userIds.contains(widget.user.id)) {
+                          userIds.add(widget.user.id);
                         }
-                        widget.userProvider.reloadUser();
+                        senderService.update({
+                          'id': sender?.id,
+                          'userIds': userIds,
+                        });
                         if (!mounted) return;
                         Navigator.pop(context);
                       },
@@ -188,11 +178,11 @@ class _AddDialogState extends State<AddDialog> {
 }
 
 class RemoveDialog extends StatefulWidget {
-  final UserProvider userProvider;
+  final UserModel user;
   final SenderModel sender;
 
   const RemoveDialog({
-    required this.userProvider,
+    required this.user,
     required this.sender,
     super.key,
   });
@@ -202,6 +192,8 @@ class RemoveDialog extends StatefulWidget {
 }
 
 class _RemoveDialogState extends State<RemoveDialog> {
+  SenderService senderService = SenderService();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -230,14 +222,14 @@ class _RemoveDialogState extends State<RemoveDialog> {
                 labelColor: kWhiteColor,
                 backgroundColor: kRedColor,
                 onPressed: () async {
-                  String? error =
-                      await widget.userProvider.removeSender(widget.sender);
-                  if (error != null) {
-                    if (!mounted) return;
-                    showMessage(context, error, false);
-                    return;
+                  List<String> userIds = widget.sender.userIds;
+                  if (userIds.contains(widget.user.id)) {
+                    userIds.remove(widget.user.id);
                   }
-                  widget.userProvider.reloadUser();
+                  senderService.update({
+                    'id': widget.sender.id,
+                    'userIds': userIds,
+                  });
                   if (!mounted) return;
                   Navigator.pop(context);
                 },

@@ -42,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Text(
-                    '一斉通知アプリ - 受信者用',
+                    '一斉通知アプリ - 受信ユーザー用',
                     style: TextStyle(
                       color: kBlackColor,
                       fontSize: 18,

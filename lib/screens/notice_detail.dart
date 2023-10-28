@@ -20,7 +20,7 @@ class NoticeDetailScreen extends StatefulWidget {
 
 class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
   UserNoticeService userNoticeService = UserNoticeService();
-  String? answerValue;
+  String? answer;
 
   void _init() async {
     if (widget.notice.isRead == false) {
@@ -96,48 +96,55 @@ class _NoticeDetailScreenState extends State<NoticeDetailScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      '選択して回答してください',
-                      style: TextStyle(
+                    Text(
+                      widget.notice.answer == '' ? '回答してください' : '回答完了',
+                      style: const TextStyle(
                         color: kRedColor,
                         fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'SourceHanSansJP-Bold',
                       ),
                     ),
-                    Column(
-                      children: [
-                        CustomRadioListTile(
-                          value: '参加します',
-                          groupValue: answerValue,
-                          onChanged: (value) {
-                            setState(() {
-                              answerValue = value;
-                            });
-                          },
-                        ),
-                        CustomRadioListTile(
-                          value: '参加しません',
-                          groupValue: answerValue,
-                          onChanged: (value) {
-                            setState(() {
-                              answerValue = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    answerValue == null
-                        ? const CustomLgButton(
-                            label: '回答を送信する',
-                            labelColor: kWhiteColor,
-                            backgroundColor: kGreyColor,
+                    widget.notice.answer == ''
+                        ? Column(
+                            children: widget.notice.choices.map((choice) {
+                              return CustomRadioListTile(
+                                value: choice,
+                                groupValue: answer,
+                                onChanged: (value) {
+                                  setState(() {
+                                    answer = value;
+                                  });
+                                },
+                              );
+                            }).toList(),
                           )
-                        : CustomLgButton(
-                            label: '回答を送信する',
-                            labelColor: kWhiteColor,
-                            backgroundColor: kBlueColor,
-                            onPressed: () {},
-                          ),
+                        : ListTile(title: Text(widget.notice.answer)),
+                    const SizedBox(height: 16),
+                    widget.notice.answer == ''
+                        ? answer == null
+                            ? const CustomLgButton(
+                                label: '回答を送信する',
+                                labelColor: kWhiteColor,
+                                backgroundColor: kGreyColor,
+                              )
+                            : CustomLgButton(
+                                label: '回答を送信する',
+                                labelColor: kWhiteColor,
+                                backgroundColor: kBlueColor,
+                                onPressed: () async {
+                                  userNoticeService.update({
+                                    'id': widget.notice.id,
+                                    'userId': widget.notice.userId,
+                                    'answer': answer,
+                                  });
+                                  if (!mounted) return;
+                                  showMessage(context, '回答を送信しました', true);
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                },
+                              )
+                        : Container(),
                   ],
                 )
               : Container(),

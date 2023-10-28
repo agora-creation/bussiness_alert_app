@@ -83,9 +83,9 @@ class NoticeList extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         notice.isAnswer
-                            ? const Text(
-                                '回答が必要です',
-                                style: TextStyle(
+                            ? Text(
+                                notice.answer == '' ? '回答が必要です' : '回答完了',
+                                style: const TextStyle(
                                   color: kRedColor,
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
